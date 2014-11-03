@@ -2,6 +2,8 @@
 
 These are some simple Perl scripts for processing files from [Ponysay](https://github.com/erkin/ponysay). Equus Dixit proper was intended to be a backport of Ponysay to `cowsay` and `fortune`. However, Ponysay has diverged significantly from those two programs, so it is difficult to backport it without effectively reimplementing the entire program.
 
+"Equus dixit" is a Latin phrase that literally means "[the] horse said"; it is a rough translation of "Ponysay" and a play on the phrase "[ipse dixit](http://en.wikipedia.org/wiki/Ipse_dixit)".
+
 These tools have been tested against Ponysay 3.0.2.
 
 ## cowprep.pl
