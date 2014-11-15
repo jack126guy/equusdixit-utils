@@ -22,6 +22,8 @@ die 'Could not open directory: ' . $! unless opendir(QUOTES, $quotedir);
 my (%quotes, $pony, $number);
 while($_ = readdir QUOTES) {
 	next if m/^\./;
+	next unless m/\./;
+	next unless -f $quotedir . $_;
 	($pony, $number) = split /\./;
 	$quotes{$pony} = [] unless exists $quotes{$pony};
 	warn 'Could not open ' . $_ . ': ' . $! unless open(QUOTEFILE, '<:crlf:encoding(UTF-8)', './ponyquotes/' . $_);
