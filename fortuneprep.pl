@@ -26,7 +26,7 @@ while($_ = readdir QUOTES) {
 	next unless -f $quotedir . $_;
 	($pony, $number) = split /\./;
 	$quotes{$pony} = [] unless exists $quotes{$pony};
-	warn 'Could not open ' . $_ . ': ' . $! unless open(QUOTEFILE, '<:crlf:encoding(UTF-8)', './ponyquotes/' . $_);
+	warn 'Could not open ' . $_ . ': ' . $! unless open(QUOTEFILE, '<:crlf:encoding(UTF-8)', $quotedir . $_);
 	while(<QUOTEFILE>) {
 		$quotes{$pony}->[$number] .= $_;
 	}
