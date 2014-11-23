@@ -32,14 +32,15 @@ while($_ = readdir QUOTES) {
 	}
 	close QUOTEFILE;
 }
+die 'Could not change to fortune directory: ' . $! unless chdir($fortunedir);
 foreach(keys %quotes) {
-	warn 'Could not open ' . $fortunedir . $_ . ': ' . $! unless open(FORTUNEFILE, '>:encoding(UTF-8)', $fortunedir . $_);
+	warn 'Could not open ' . $_ . ': ' . $! unless open(FORTUNEFILE, '>:encoding(UTF-8)', $_);
 	foreach(@{$quotes{$_}}) {
 		print FORTUNEFILE;
 		print FORTUNEFILE '%', "\n";
 	}
 	#Make data file
-	system 'strfile ' . $fortunedir . $_;
+	system 'strfile ' . $_;
 	#Add .u8 symlink
-	system 'ln -sTr ' . $fortunedir . $_ . ' ' . $fortunedir . $_ . '.u8';
+	system 'ln -s ' . $_ . ' ' . $_ . '.u8';
 }
