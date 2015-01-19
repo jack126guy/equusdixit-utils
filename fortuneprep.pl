@@ -18,26 +18,26 @@ die 'Usage: perl fortuneprep.pl [quotedir] [fortunedir]' unless @ARGV >= 2;
 my ($quotedir, $fortunedir) = @ARGV;
 $quotedir .= '/' unless ($quotedir =~ m/\/$/ || $quotedir =~ m/\\$/);
 $fortunedir .= '/' unless ($fortunedir =~ m/\/$/ || $fortunedir =~ m/\\$/);
-die 'Could not open directory: ' . $! unless opendir(QUOTES, $quotedir);
+die 'Could not open directory: ' . $! unless opendir(my $QUOTES, $quotedir);
 my (%quotes, $pony, $number);
-while($_ = readdir QUOTES) {
+while($_ = readdir $QUOTES) {
 	next if m/^\./;
 	next unless m/\./;
 	next unless -f $quotedir . $_;
 	($pony, $number) = split /\./;
 	$quotes{$pony} = [] unless exists $quotes{$pony};
-	warn 'Could not open ' . $_ . ': ' . $! unless open(QUOTEFILE, '<:crlf:encoding(UTF-8)', $quotedir . $_);
-	while(<QUOTEFILE>) {
+	warn 'Could not open ' . $_ . ': ' . $! unless open(my $QUOTEFILE, '<:crlf:encoding(UTF-8)', $quotedir . $_);
+	while(<$QUOTEFILE>) {
 		$quotes{$pony}->[$number] .= $_;
 	}
-	close QUOTEFILE;
+	close $QUOTEFILE;
 }
 die 'Could not change to fortune directory: ' . $! unless chdir($fortunedir);
 foreach(keys %quotes) {
-	warn 'Could not open ' . $_ . ': ' . $! unless open(FORTUNEFILE, '>:encoding(UTF-8)', $_);
+	warn 'Could not open ' . $_ . ': ' . $! unless open(my $FORTUNEFILE, '>:encoding(UTF-8)', $_);
 	foreach(@{$quotes{$_}}) {
-		print FORTUNEFILE;
-		print FORTUNEFILE '%', "\n";
+		print $FORTUNEFILE $_;
+		print $FORTUNEFILE '%', "\n";
 	}
 	#Make data file
 	system 'strfile ' . $_;

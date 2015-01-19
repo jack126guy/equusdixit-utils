@@ -19,38 +19,38 @@ die 'Usage: perl cowprep.pl [ponydir] [cowdir]' unless @ARGV >= 2;
 my ($ponydir, $cowdir) = @ARGV;
 $ponydir .= '/' unless ($ponydir =~ m/\/$/ || $ponydir =~ m/\\$/);
 $cowdir .= '/' unless ($cowdir =~ m/\/$/ || $cowdir =~ m/\\$/);
-die 'Could not open directory: ' . $! unless opendir(PONYDIR, $ponydir);
+die 'Could not open directory: ' . $! unless opendir(my $PONYDIR, $ponydir);
 my $ponyname;
 my $isheader;
-while($_ = readdir PONYDIR) {
+while($_ = readdir $PONYDIR) {
 	next if m/^\./;
 	($ponyname, undef) = split /\./;
-	warn 'Could not open ' . $_ . ': ' . $! unless open(PONY, '<:encoding(UTF-8)', $ponydir . $_);
-	warn 'Could not open ' . $ponyname . '.cow: ' . $! unless open(COW, '>:encoding(UTF-8)', $cowdir . $ponyname . '.cow');
+	warn 'Could not open ' . $_ . ': ' . $! unless open(my $PONY, '<:encoding(UTF-8)', $ponydir . $_);
+	warn 'Could not open ' . $ponyname . '.cow: ' . $! unless open(my $COW, '>:encoding(UTF-8)', $cowdir . $ponyname . '.cow');
 	$isheader = 0;
 	#Needed for Unicode block elements
 	print COW 'use utf8;', "\n";
-	while(<PONY>) {
+	while(<$PONY>) {
 		if(m/^\$\$\$/) {
-			print COW '#', $_;
+			print $COW '#', $_;
 			if($isheader) {
 				#End of header; add prefix to main text
 				#Replace $/$ thoughts with either / or o, depending
-				print COW '$rthoughts = $thoughts eq \'\\\\\' ? \'/\' : $thoughts;', "\n";
-				print COW '$the_cow = <<EOF;', "\n";
+				print $COW '$rthoughts = $thoughts eq \'\\\\\' ? \'/\' : $thoughts;', "\n";
+				print $COW '$the_cow = <<EOF;', "\n";
 			}
 			$isheader = $isheader ? 0 : 1;
 		}
 		if($isheader) {
-			print COW '#', $_;
+			print $COW '#', $_;
 		} else {
 			next if m/\$balloon/;
 			s/\$\\\$/\$thoughts/g;
 			s/\$\/\$/\$rthoughts/g;
-			print COW $_;
+			print $COW $_;
 		}
 	}
-	print COW 'EOF', "\n";
-	close PONY;
-	close COW;
+	print $COW 'EOF', "\n";
+	close $PONY;
+	close $COW;
 }
