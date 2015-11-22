@@ -40,6 +40,7 @@ while($_ = readdir $PONYDIR) {
 				print $COW '$the_cow = <<EOF;', "\n";
 			}
 			$isheader = $isheader ? 0 : 1;
+			next;
 		}
 		if($isheader) {
 			print $COW '#', $_;
