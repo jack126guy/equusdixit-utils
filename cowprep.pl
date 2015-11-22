@@ -29,7 +29,7 @@ while($_ = readdir $PONYDIR) {
 	warn 'Could not open ' . $ponyname . '.cow: ' . $! unless open(my $COW, '>:encoding(UTF-8)', $cowdir . $ponyname . '.cow');
 	$isheader = 0;
 	#Needed for Unicode block elements
-	print COW 'use utf8;', "\n";
+	print $COW 'use utf8;', "\n";
 	while(<$PONY>) {
 		if(m/^\$\$\$/) {
 			print $COW '#', $_;
