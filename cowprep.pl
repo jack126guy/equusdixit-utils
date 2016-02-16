@@ -16,19 +16,32 @@ use strict;
 use warnings;
 use feature 'unicode_strings';
 
+#Check command-line arguments
 die 'Usage: perl cowprep.pl [ponydir] [cowdir]' unless @ARGV >= 2;
+
 my ($ponydir, $cowdir) = @ARGV;
+
+#Add trailing slashes to directories
 $ponydir .= '/' unless ($ponydir =~ m/\/$/ || $ponydir =~ m/\\$/);
 $cowdir .= '/' unless ($cowdir =~ m/\/$/ || $cowdir =~ m/\\$/);
+
 die 'Could not open directory: ' . $! unless opendir(my $PONYDIR, $ponydir);
 my $ponyname;
 my $isheader;
+
+#Read ponies
 while($_ = readdir $PONYDIR) {
+	#Skip any dotfiles
 	next if m/^\./;
+
 	($ponyname, undef) = split /\./;
+
+	#Open files
 	warn 'Could not open ' . $_ . ': ' . $! unless open(my $PONY, '<:encoding(UTF-8)', $ponydir . $_);
 	warn 'Could not open ' . $ponyname . '.cow: ' . $! unless open(my $COW, '>:encoding(UTF-8)', $cowdir . $ponyname . '.cow');
+
 	$isheader = 0;
+
 	#Needed for Unicode block elements
 	print $COW 'use utf8;', "\n";
 	while(<$PONY>) {

@@ -15,24 +15,38 @@
 use strict;
 use warnings;
 
+#Check command-line arguments
 die 'Usage: perl fortuneprep.pl [quotedir] [fortunedir]' unless @ARGV >= 2;
+
 my ($quotedir, $fortunedir) = @ARGV;
+
+#Add trailing slashes to directories
 $quotedir .= '/' unless ($quotedir =~ m/\/$/ || $quotedir =~ m/\\$/);
 $fortunedir .= '/' unless ($fortunedir =~ m/\/$/ || $fortunedir =~ m/\\$/);
+
 die 'Could not open directory: ' . $! unless opendir(my $QUOTES, $quotedir);
 my (%quotes, $pony, $number);
+
+#Read quotations
 while($_ = readdir $QUOTES) {
-	next if m/^\./;
-	next unless m/\./;
-	next unless -f $quotedir . $_;
+	#Skip things
+	next if m/^\./; #Dotfiles
+	next unless m/\./; #Files with no dot
+	next unless -f $quotedir . $_; #Things that aren't files
+
 	($pony, $number) = split /\./;
+
+	#Create quotation array
 	$quotes{$pony} = [] unless exists $quotes{$pony};
+
 	warn 'Could not open ' . $_ . ': ' . $! unless open(my $QUOTEFILE, '<:crlf:encoding(UTF-8)', $quotedir . $_);
 	while(<$QUOTEFILE>) {
 		$quotes{$pony}->[$number] .= $_;
 	}
 	close $QUOTEFILE;
 }
+
+#Write fortunes
 die 'Could not change to fortune directory: ' . $! unless chdir($fortunedir);
 foreach(keys %quotes) {
 	warn 'Could not open ' . $_ . ': ' . $! unless open(my $FORTUNEFILE, '>:encoding(UTF-8)', $_);
