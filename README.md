@@ -26,6 +26,10 @@ Usage (can also be found by running without any arguments):
 
     perl fortuneprep.pl [quotedir] [fortunedir]
 
+## equusdixit.pl
+
+The `equusdixit.pl` tool is a wrapper for cowsay that formats the message so that the bubble is wide enough for the line of the ponies to connect with it. Because it uses the `-n` option of `cowsay`, the message must be passed via standard input, not the command line. All other options are passed verbatim to `cowsay`.
+
 ## Naive Assumptions
 
 These tools assume a few things about the files from Ponysay, and they (currently) do not function if these are not met:
