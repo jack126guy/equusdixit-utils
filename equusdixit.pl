@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Text::Wrap 'wrap';
 
-my $width = 40;
+my $width = 70;
 local $Text::Wrap::columns = $width;
 
 #Open pipe
